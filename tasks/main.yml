@@ -1,0 +1,79 @@
+---
+- name: Ensure github.com is a known host.
+  lineinfile:
+    dest: "~{{ username }}/.ssh/known_hosts"
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+  sudo: yes
+  sudo_user: "{{ username }}"
+
+- name: Install homeshick
+  git:
+    repo: git://github.com/andsens/homeshick.git
+    dest: "~{{ username }}/.homesick/repos/homeshick"
+
+- name: Update bashrc to have homeshick initialization
+  lineinfile:
+    dest: "~{{ username }}/.bashrc"
+    line: 'source "$HOME/.homesick/repos/homeshick/homeshick.sh"'
+    regexp: 'homeshick'
+    create: yes
+
+- name: Check whether dotfiles directory exists.
+  stat:
+    path: "~{{ username }}/.homesick/repos/dotfiles"
+  register: dotfiles_directory_results
+
+- name: Convert dotfiles repo origin format from SSH to HTTPS.
+  command: git remote set-url origin {{ dotfiles_repo_url_https }}
+  args:
+    chdir: "~{{ username }}/.homesick/repos/dotfiles"
+  when: dotfiles_directory_results.stat.exists
+
+- name: Clone dotfiles repo.
+  git:
+    repo: "{{ dotfiles_repo_url_https }}"
+    dest: "~{{ username }}/.homesick/repos/dotfiles"
+  register: clone_dotfiles_result
+
+- name: Convert dotfiles repo origin format from HTTPS to SSH.
+  command: git remote set-url origin {{ dotfiles_repo_url_ssh }}
+  args:
+    chdir: "~{{ username }}/.homesick/repos/dotfiles"
+  # Only expect SSH auth when a valid private key is present.
+  when: "'personal' in group_names"
+
+- name: Convert dotfiles repo origin format from HTTPS to SSH.
+  command: git remote set-url origin {{ dotfiles_repo_url_ssh }}
+  args:
+    chdir: "~{{ username }}/.homesick/repos/dotfiles"
+  # Only expect SSH auth when a valid private key is present.
+  when: "'personal' in group_names"
+
+- name: Create symlinks for dotfiles.
+  command: "~{{ username }}/.homesick/repos/homeshick/bin/homeshick link dotfiles -f -q"
+  when: clone_dotfiles_result.changed
+
+- name: Install Vundle.
+  git:
+    repo: https://github.com/VundleVim/Vundle.vim
+    dest: "~{{ username }}/.vim/bundle/Vundle.vim"
+
+- name: Install VimPlug.
+  get_url:
+    url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    dest: "~{{ username }}/.vim/autoload/plug.vim"
+
+- name: Install vim plugins.
+  # Vundle command
+  # command: vim +PluginInstall +qall
+  # VimPlug command
+  command: vim +PlugInstall +qall
+  when: clone_dotfiles_result.changed
+
+  # Haven't found a way to clean unwanted plugins
+  # noninteractively.
+#- name: clean vim plugins
+#  command: vim +PluginClean
