@@ -4,5 +4,6 @@
 # Use local user if none specified
 dotfiles_username: "{{ ansible_user_id | default(lookup('pipe', 'whoami')) }}"
 
-dotfiles_repo_url_https: https://github.com/{{ github_username }}/dotfiles
-dotfiles_repo_url_ssh: git@github.com:{{ github_username }}/dotfiles.git
+dotfiles_repo_name: dotfiles
+dotfiles_repo_url_https: https://github.com/{{ github_username }}/{{ dotfiles_repo_name }}
+dotfiles_repo_url_ssh: git@github.com:{{ github_username }}/{{ dotfiles_repo_name }}.git
