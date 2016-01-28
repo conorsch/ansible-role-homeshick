@@ -17,7 +17,7 @@
 
 - name: Install homeshick
   git:
-    repo: git://github.com/andsens/homeshick.git
+    repo: https://github.com/andsens/homeshick
     dest: "~{{ dotfiles_username }}/.homesick/repos/homeshick"
 
 - name: Update bashrc to have homeshick initialization
@@ -43,13 +43,6 @@
     repo: "{{ dotfiles_repo_url_https }}"
     dest: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
   register: clone_dotfiles_result
-
-- name: Convert dotfiles repo origin format from HTTPS to SSH.
-  command: git remote set-url origin {{ dotfiles_repo_url_ssh }}
-  args:
-    chdir: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
-  # Only expect SSH auth when a valid private key is present.
-  when: "'personal' in group_names"
 
 - name: Convert dotfiles repo origin format from HTTPS to SSH.
   command: git remote set-url origin {{ dotfiles_repo_url_ssh }}
