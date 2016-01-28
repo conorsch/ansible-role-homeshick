@@ -1,0 +1,22 @@
+---
+- name: Install Vundle.
+  git:
+    repo: https://github.com/VundleVim/Vundle.vim
+    dest: "~{{ dotfiles_username }}/.vim/bundle/Vundle.vim"
+
+- name: Install VimPlug.
+  get_url:
+    url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    dest: "~{{ dotfiles_username }}/.vim/autoload/plug.vim"
+
+- name: Install vim plugins.
+  # Vundle command
+  # command: vim +PluginInstall +qall
+  # VimPlug command
+  command: vim +PlugInstall +qall
+  when: clone_dotfiles_result.changed
+
+  # Haven't found a way to clean unwanted plugins
+  # noninteractively.
+#- name: clean vim plugins
+#  command: vim +PluginClean
