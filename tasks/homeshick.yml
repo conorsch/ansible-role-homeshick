@@ -1,7 +1,7 @@
 ---
 - name: Look up GitHub SSH host key.
   local_action: command ssh-keyscan -t rsa github.com
-  sudo: no
+  become: no
   register: github_ssh_keyscan_result
   run_once: yes
 
@@ -12,8 +12,8 @@
     state: present
     line: "{{ github_ssh_keyscan_result.stdout }}"
     regexp: "^github\\.com"
-  sudo: yes
-  sudo_user: "{{ dotfiles_username }}"
+  become: yes
+  become_user: "{{ dotfiles_username }}"
 
 - name: Install homeshick
   git:
