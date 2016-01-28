@@ -1,8 +1,8 @@
 ---
-- name: Look up github.com known host info.
-  local_action:
-    module: set_fact
-    github_ssh_host_key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+- name: Look up GitHub SSH host key.
+  local_action: command ssh-keyscan -t rsa github.com
+  sudo: no
+  register: github_ssh_keyscan_result
   run_once: yes
 
 - name: Ensure github.com is a known host.
@@ -10,7 +10,7 @@
     dest: "~{{ dotfiles_username }}/.ssh/known_hosts"
     create: yes
     state: present
-    line: "{{ github_ssh_host_key }}"
+    line: "{{ github_ssh_keyscan_result.stdout }}"
     regexp: "^github\\.com"
   sudo: yes
   sudo_user: "{{ dotfiles_username }}"
