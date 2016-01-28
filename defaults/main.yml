@@ -1,2 +1,5 @@
 ---
 # defaults file for homeshick
+
+# Use local user if none specified
+dotfiles_username: "{{ lookup('pipe', 'whoami') }}"
