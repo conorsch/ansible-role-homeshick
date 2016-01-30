@@ -1,20 +1,4 @@
 ---
-- name: Look up GitHub SSH host key.
-  local_action: command ssh-keyscan -t rsa github.com
-  become: no
-  register: github_ssh_keyscan_result
-  run_once: yes
-
-- name: Ensure github.com is a known host.
-  lineinfile:
-    dest: "~{{ dotfiles_username }}/.ssh/known_hosts"
-    create: yes
-    state: present
-    line: "{{ github_ssh_keyscan_result.stdout }}"
-    regexp: "^github\\.com"
-  become: yes
-  become_user: "{{ dotfiles_username }}"
-
 - name: Install homeshick
   git:
     repo: https://github.com/andsens/homeshick
@@ -32,24 +16,11 @@
     path: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
   register: dotfiles_directory_results
 
-- name: Convert dotfiles repo origin format from SSH to HTTPS.
-  command: git remote set-url origin {{ dotfiles_repo_url_https }}
-  args:
-    chdir: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
-  when: dotfiles_directory_results.stat.exists
-
 - name: Clone dotfiles repo.
   git:
-    repo: "{{ dotfiles_repo_url_https }}"
+    repo: "{{ dotfiles_repo_url }}"
     dest: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
   register: clone_dotfiles_result
-
-- name: Convert dotfiles repo origin format from HTTPS to SSH.
-  command: git remote set-url origin {{ dotfiles_repo_url_ssh }}
-  args:
-    chdir: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
-  # Only expect SSH auth when a valid private key is present.
-  when: "'personal' in group_names"
 
 - name: Create symlinks for dotfiles.
   command: "~{{ dotfiles_username }}/.homesick/repos/homeshick/bin/homeshick link dotfiles -f -q"

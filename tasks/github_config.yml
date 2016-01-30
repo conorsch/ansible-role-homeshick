@@ -1,0 +1,17 @@
+---
+- name: Look up GitHub SSH host key.
+  local_action: command ssh-keyscan -t rsa github.com
+  become: no
+  register: github_ssh_keyscan_result
+  run_once: yes
+
+- name: Ensure github.com is a known host.
+  lineinfile:
+    dest: "~{{ dotfiles_username }}/.ssh/known_hosts"
+    create: yes
+    state: present
+    line: "{{ github_ssh_keyscan_result.stdout }}"
+    regexp: "^github\\.com"
+  become: yes
+  become_user: "{{ dotfiles_username }}"
+
