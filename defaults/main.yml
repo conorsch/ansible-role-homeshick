@@ -1,8 +1,10 @@
 ---
 # defaults file for homeshick
 
-# Use local user if none specified
-dotfiles_username: "{{ ansible_user_id | default(lookup('pipe', 'whoami')) }}"
+# Tricky logic but sane. Use the current user on the remote host, unless it's root.
+# Fall back to the SSH user on the remote host. If that's not defined, default
+# to the user on the Ansible controller.
+dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else ansible_ssh_user | default(lookup('pipe', 'whoami')) }}"
 
 dotfiles_repo_name: dotfiles
 dotfiles_repo_url_https: https://github.com/{{ github_username }}/{{ dotfiles_repo_name }}

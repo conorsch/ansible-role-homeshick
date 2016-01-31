@@ -1,4 +1,10 @@
 ---
+  # Helps to disambiguate sudo/become behavior.
+- name: Display target username for dotfiles management.
+  debug:
+    msg: >
+      Configuring dotfiles for user {{ dotfiles_username }}.
+
 - name: Decide on HTTPS versus SSH cloning URL.
   set_fact:
     dotfiles_repo_url: "{{ dotfiles_repo_url_git if 'personal' in group_names else dotfiles_repo_url_https }}"
