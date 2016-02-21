@@ -3,6 +3,8 @@
   local_action: command ssh-keyscan -t rsa github.com
   become: no
   register: github_ssh_keyscan_result
+  changed_when: false # read-only task
+  always_run: yes # for check mode
   run_once: yes
 
 - name: Ensure github.com is a known host.

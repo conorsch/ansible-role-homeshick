@@ -4,6 +4,7 @@
   register: vim_installed_result
   failed_when: false
   changed_when: false
+  always_run: true
 
 #- name: Install Vundle.
 #  git:
@@ -26,6 +27,6 @@
         and vim_installed_result.rc == 0
 
   # Haven't found a way to clean unwanted plugins
-  # noninteractively.
-#- name: clean vim plugins
-#  command: vim +PluginClean
+  # idempotently.
+  # - name: clean vim plugins
+  #  command: vim +PlugClean +qall
