@@ -2,9 +2,9 @@
 # defaults file for homeshick
 
 # Tricky logic but sane. Use the current user on the remote host, unless it's root.
-# Fall back to the SSH user on the remote host. If that's not defined, default
-# to the user on the Ansible controller.
-dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else ansible_ssh_user | default(lookup('pipe', 'whoami')) }}"
+# Fall back to the SSH user on the remote host. If that's also root, we're surely
+# bootstrapping a system, so fall back again to the user on the Ansible controller.
+dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else (ansible_ssh_user if ansible_ssh_user != 'root' else lookup('pipe', 'whoami')) }}"
 
 dotfiles_repo_name: dotfiles
 dotfiles_repo_url_https: https://github.com/{{ github_username }}/{{ dotfiles_repo_name }}
