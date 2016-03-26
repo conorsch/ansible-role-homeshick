@@ -7,6 +7,7 @@
 dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else (ansible_ssh_user if ansible_ssh_user != 'root' else lookup('pipe', 'whoami')) }}"
 
 dotfiles_repo_name: dotfiles
+dotfiles_repo_version: master
 dotfiles_repo_url_https: https://github.com/{{ github_username }}/{{ dotfiles_repo_name }}
 dotfiles_repo_url_ssh: git@github.com:{{ github_username }}/{{ dotfiles_repo_name }}.git
 
