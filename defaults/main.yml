@@ -8,8 +8,9 @@ dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else (ansibl
 
 dotfiles_repo_name: dotfiles
 dotfiles_repo_version: master
-dotfiles_repo_url_https: https://github.com/{{ github_username }}/{{ dotfiles_repo_name }}
-dotfiles_repo_url_ssh: git@github.com:{{ github_username }}/{{ dotfiles_repo_name }}.git
+dotfiles_github_username: conorsch
+dotfiles_repo_url_https: https://github.com/{{ dotfiles_github_username }}/{{ dotfiles_repo_name }}
+dotfiles_repo_url_ssh: git@github.com:{{ dotfiles_github_username }}/{{ dotfiles_repo_name }}.git
 
 # Dotfiles may reference PS1 values from liquidprompt.
 # Add it as a homeshick "castle".
