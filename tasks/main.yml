@@ -18,3 +18,5 @@
 
 - include: vim.yml
 
+- include: liquidprompt.yml
+  when: dotfiles_include_liquidprompt == true
