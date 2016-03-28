@@ -2,8 +2,8 @@
   # Helps to disambiguate sudo/become behavior.
 - name: Display target username for dotfiles management.
   debug:
-    msg: >
-      Configuring dotfiles for user {{ dotfiles_username }}.
+    msg: >-
+      Configuring dotfiles for user '{{ dotfiles_username }}'.
 
 - name: Decide on HTTPS versus SSH cloning URL.
   set_fact:
