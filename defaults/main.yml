@@ -4,7 +4,12 @@
 # Tricky logic but sane. Use the current user on the remote host, unless it's root.
 # Fall back to the SSH user on the remote host. If that's also root, we're surely
 # bootstrapping a system, so fall back again to the user on the Ansible controller.
-dotfiles_username: "{{ ansible_user_id if ansible_user_id != 'root' else (ansible_ssh_user if ansible_ssh_user != 'root' else lookup('pipe', 'whoami')) }}"
+# The 'fallback_user' is necessary for Ansible v2 support, since ansible_ssh_user
+# is no longer defined by default, even over SSH connections.
+dotfiles_fallback_user: "{{ lookup('env', 'USER') }}"
+dotfiles_username: >-
+  {{ ansible_ssh_user|default(dotfiles_fallback_user)
+  if ansible_ssh_user|default(dotfiles_fallback_user) != 'root' else  dotfiles_fallback_user }}
 
 dotfiles_repo_name: dotfiles
 dotfiles_repo_version: master
