@@ -22,5 +22,9 @@
   ignore_errors: "{{ true if ansible_connection == 'local' else false }}"
 
 - name: Create symlinks for dotfiles.
-  command: "~{{ dotfiles_username }}/.homesick/repos/homeshick/bin/homeshick link dotfiles -f -q"
-  when: clone_dotfiles_result.changed
+  shell: >
+    ~{{ dotfiles_username|quote }}/.homesick/repos/homeshick/bin/homeshick
+    symlink dotfiles --force --verbose
+    | awk '{ print $2 }' | sort | uniq
+  register: symlink_dotfiles_result
+  changed_when: "'identical' not in symlink_dotfiles_result.stdout"
