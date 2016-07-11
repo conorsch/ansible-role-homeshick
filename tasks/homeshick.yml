@@ -16,7 +16,7 @@
     repo: "{{ dotfiles_repo_url }}"
     dest: "~{{ dotfiles_username }}/.homesick/repos/dotfiles"
     version: "{{ dotfiles_repo_version }}"
-    force: "{{ false if ansible_connection == 'local' else true }}"
+    force: "{{ dotfiles_force_clone }}"
   register: clone_dotfiles_result
   # The Ansible host will often have local dotfiles changes; press on.
   ignore_errors: "{{ true if ansible_connection == 'local' else false }}"

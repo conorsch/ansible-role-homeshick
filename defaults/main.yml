@@ -17,6 +17,8 @@ dotfiles_github_username: conorsch
 dotfiles_repo_url_https: https://github.com/{{ dotfiles_github_username }}/{{ dotfiles_repo_name }}
 dotfiles_repo_url_ssh: git@github.com:{{ dotfiles_github_username }}/{{ dotfiles_repo_name }}.git
 
+dotfiles_force_clone: "{{ false if ansible_connection == 'local' else true }}"
+
 # Dotfiles may reference PS1 values from liquidprompt.
 # Add it as a homeshick "castle".
 dotfiles_include_liquidprompt: true
