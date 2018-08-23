@@ -5,11 +5,6 @@
     msg: >-
       Configuring dotfiles for user '{{ dotfiles_username }}'.
 
-- name: Decide on HTTPS versus SSH cloning URL.
-  set_fact:
-    dotfiles_repo_url: "{{ dotfiles_repo_url_ssh if 'personal' in group_names else dotfiles_repo_url_https }}"
-  tags: always
-
 - include: github_config.yml
   when: dotfiles_repo_url.startswith('git@github.com')
   tags: github_config

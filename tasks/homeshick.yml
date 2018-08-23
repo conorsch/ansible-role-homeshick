@@ -4,13 +4,6 @@
     repo: https://github.com/andsens/homeshick
     dest: "~{{ dotfiles_username }}/.homesick/repos/homeshick"
 
-- name: Update bashrc to have homeshick initialization
-  lineinfile:
-    dest: "~{{ dotfiles_username }}/.bashrc"
-    line: 'source "$HOME/.homesick/repos/homeshick/homeshick.sh"'
-    regexp: 'homeshick'
-    create: yes
-
 - name: Clone dotfiles repo.
   git:
     repo: "{{ dotfiles_repo_url }}"
