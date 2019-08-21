@@ -4,7 +4,7 @@
   become: no
   register: github_ssh_keyscan_result
   changed_when: false # read-only task
-  always_run: yes # for check mode
+  check_mode: yes
   run_once: yes # only run once on the ansible contrller
 
 - name: Ensure github.com is a known host.

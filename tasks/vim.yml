@@ -4,7 +4,7 @@
   register: vim_installed_result
   failed_when: false
   changed_when: false
-  always_run: true
+  check_mode: no
 
 #- name: Install Vundle.
 #  git:
